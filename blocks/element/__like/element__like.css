@@ -1,0 +1,9 @@
+.element__like {
+  grid-area: like;
+  margin-top: 30px;
+  justify-self: center;
+}
+
+.element__like:hover {
+  opacity: 0.6;
+}

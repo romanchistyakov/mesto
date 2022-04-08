@@ -1,0 +1,22 @@
+.profile__profile-info {
+  height: 73px;
+  display: grid;
+  grid-template-areas: 
+  "name edit-button"
+  "description description";
+  grid-template-columns: 294px auto;
+  grid-template-rows: 39px auto;
+  margin-right: auto;
+}
+
+@media screen and (max-width: 660px) {
+  .profile__profile-info {
+    margin: 0;
+    padding-top: 26px;
+    grid-template-columns: 28px 189px 28px;
+    grid-template-rows: 26px auto;
+    grid-template-areas: 
+    ". name edit-button"
+    "description description description";
+  }
+}
