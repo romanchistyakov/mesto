@@ -7,12 +7,18 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: none;
+  cursor: pointer;
+  background-image: url(../../../images/add-button.svg);
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-@media screen and (max-width: 660px) {
+@media screen and (max-width: 900px) {
   .profile__add-button {
     width: 282px;
     margin-top: 16px;
+    background-size: 16px;
   }
 }
 

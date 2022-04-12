@@ -2,8 +2,14 @@
   grid-area: like;
   margin-top: 30px;
   justify-self: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 22px;
+  height: 19px;
 }
 
 .element__like:hover {
-  opacity: 0.6;
+  opacity: 0.5;
 }

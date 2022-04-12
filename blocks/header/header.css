@@ -3,19 +3,20 @@
   max-width: 880px;
   justify-self: center;
   margin: 0 auto;
-  border: #545454;
+  border: rgba(84, 84, 84, 0.7);;
   border-width: 0 0 1px 0;
   border-style: solid;
 }
 
-@media screen and (max-width: 880px) {
+@media screen and (max-width: 1279px) {
   .header {
-    padding-left: 27px;
+    max-width: 730px;
   }
 }
 
-@media screen and (max-width: 660px) {
+@media screen and (max-width: 900px) {
   .header {
     padding: 28px 0 28px 27px;
+    max-width: 320px;
   }
 }
