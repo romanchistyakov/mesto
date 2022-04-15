@@ -52,8 +52,8 @@
       <button type="button" class="popup__close"></button>
       <h2 class="popup__head">Новое место</h2>
       <form class="popup__edit-form" name="add-form">
-        <input type="text" name="add-input-name" class="popup__input popup__input_type_add-name" value="Название">
-        <input type="text" name="add-input-url" class="popup__input popup__input_type_add-url" value="Ссылка на картинку">
+        <input type="text" name="add-input-name" class="popup__input popup__input_type_add-name" placeholder="Название" value="">
+        <input type="text" name="add-input-url" class="popup__input popup__input_type_add-url" placeholder="Ссылка на картинку" value="">
         <button type="submit" class="popup__save">Создать</button>
       </form>
     </div>
@@ -63,16 +63,14 @@
     <div class="popup-image__container">
       <button type="button" class="popup-image__close"></button>
       <img src="#" alt="" class="popup-image__source">
-      <h2 class="popup-image__head">Новое место</h2>
+      <h2 class="popup-image__head"></h2>
     </div>
   </div>
 
   <template class="element-template">
     <li class="element">
       <button type="button" class="element__trash"></button>
-      <button type="button" class="element__popup-button">
-        <img src="#" alt="" class="element__image">
-      </button>
+      <img src="#" alt="" class="element__image">
       <h2 class="element__name"></h2>
       <button type="button" class="element__like"></button>
     </li>
