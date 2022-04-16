@@ -40,7 +40,9 @@ const cardsContainer = document.querySelector('.elements-grid');
 const elementTemplate = document.querySelector('.element-template').content;
 
 const popupTypeImageElement = document.querySelector('.popup-image');
-const closeButtonTypeImage = popupTypeImageElement.querySelector('.popup-image__close');
+const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup-image__close');
+const popupImage = popupTypeImageElement.querySelector('.popup-image__source');
+const popupImageHead = popupTypeImageElement.querySelector('.popup-image__head');
 
 // Функция Добавить карточку, Лайк, Удалить, Просмотр
 function addCard(element) {
@@ -56,18 +58,16 @@ function addCard(element) {
   });
 
   cardListElement.querySelector('.element__trash').addEventListener('click', function(event) {
-    event.target.parentElement.remove();
+    event.target.closest('.element').remove();
   });
 
   cardListElement.querySelector('.element__image').addEventListener('click', function(event) {
-
-    openPopup(popupTypeImageElement);
     
-    const popupImage = popupTypeImageElement.querySelector('.popup-image__source');
     popupImage.src = element.link;
     popupImage.alt = element.name;
-    popupTypeImageElement.querySelector('.popup-image__head').textContent = element.name;
+    popupImageHead.textContent = element.name;
 
+    openPopup(popupTypeImageElement);
   });
   
   return cardListElement;
@@ -83,22 +83,20 @@ initialCards.forEach(renderCard);
 
 // Попап Редактировать профиль
 const popupTypeEditElement = document.querySelector('.popup_type_edit');
-const editButton = document.querySelector('.profile__edit-button');
-const closeButtonTypeEdit = popupTypeEditElement.querySelector('.popup__close');
+const buttonEdit = document.querySelector('.profile__edit-button');
+const buttonCloseTypeEdit = popupTypeEditElement.querySelector('.popup__close');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 
 // Попап Редактировать профиль форма
 const formTypeEditElement = document.querySelector('.popup__edit-form');
-const editName = formTypeEditElement.querySelector('#input-name');
-const editDescription = formTypeEditElement.querySelector('#input-description');
-editName.defaultValue = profileName.textContent;
-editDescription.defaultValue = profileDescription.textContent;
+const nameEdit = formTypeEditElement.querySelector('#input-name');
+const descriptionEdit = formTypeEditElement.querySelector('#input-description');
 
 // Попап Новое место
 const popupTypeAddElement = document.querySelector('.popup_type_add');
-const addButton = document.querySelector('.profile__add-button');
-const closeButtonTypeAdd = popupTypeAddElement.querySelector('.popup__close');
+const buttonAdd = document.querySelector('.profile__add-button');
+const buttonCloseTypeAdd = popupTypeAddElement.querySelector('.popup__close');
 
 // Попап Новое место форма
 const formTypeAddElement = document.querySelector('.popup_type_add');
@@ -109,8 +107,8 @@ const inputLink = formTypeAddElement.querySelector('.popup__input_type_add-url')
 function formTypeEditSubmitHandler(evt) {
   evt.preventDefault();
 
-  profileName.textContent = editName.value;
-  profileDescription.textContent = editDescription.value;
+  profileName.textContent = nameEdit.value;
+  profileDescription.textContent = descriptionEdit.value;
 
   closePopup(popupTypeEditElement);
 };
@@ -131,26 +129,28 @@ function formTypeAddSubmitHandler(evt) {
 };
 
 // Обработчик события кнопки Редактировать профиль
-editButton.addEventListener('click', function() {
+buttonEdit.addEventListener('click', function() {
+  nameEdit.value = profileName.textContent;
+  descriptionEdit.value = profileDescription.textContent;
   openPopup(popupTypeEditElement);
 });
 
 // Обработчик события кнопки Новое место
-addButton.addEventListener('click', function() {
+buttonAdd.addEventListener('click', function() {
   openPopup(popupTypeAddElement);
 });
 
 // Обработчики события кнопки Закрыть
 
-closeButtonTypeEdit.addEventListener('click', function() {
+buttonCloseTypeEdit.addEventListener('click', function() {
   closePopup(popupTypeEditElement);
 });
 
-closeButtonTypeAdd.addEventListener('click', function() {
+buttonCloseTypeAdd.addEventListener('click', function() {
   closePopup(popupTypeAddElement);
 });
 
-closeButtonTypeImage.addEventListener('click', function() {
+buttonCloseTypeImage.addEventListener('click', function() {
   closePopup(popupTypeImageElement);
 });
 
