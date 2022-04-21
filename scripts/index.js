@@ -59,10 +59,10 @@ function openPopup(popup) {
 const cardsContainer = document.querySelector('.elements-grid');
 const elementTemplate = document.querySelector('.element-template').content;
 
-const popupTypeImageElement = document.querySelector('.popup-image');
-const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup-image__close');
-const popupImage = popupTypeImageElement.querySelector('.popup-image__source');
-const popupImageHead = popupTypeImageElement.querySelector('.popup-image__head');
+const popupTypeImageElement = document.querySelector('.popup_type_image');
+const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup__close');
+const popupImage = popupTypeImageElement.querySelector('.popup__image-source');
+const popupImageHead = popupTypeImageElement.querySelector('.popup__image-head');
 
 // Функция Добавить карточку, Лайк, Удалить, Просмотр
 function addCard(element) {
