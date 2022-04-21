@@ -30,9 +30,29 @@ function closePopup(popup) {
   popup.classList.remove('popup_opened');
 };
 
+// Закрытие попапа клавишей Escape
+const closePopupEscape = function (popup) {
+  document.addEventListener('keydown', function (evt) {
+    if (evt.key === 'Escape') {
+      closePopup(popup);
+    }
+  });
+};
+
+// Закрытие попапа кликом на оверлэй
+const closePopupOverlay = function (popup) {
+  popup.addEventListener('click', function (evt) {
+    if(evt.target === evt.currentTarget) {
+      closePopup(popup);
+    }
+  });
+};
+
 // Открытие попапа
 function openPopup(popup) {
   popup.classList.add('popup_opened');
+  closePopupEscape(popup);
+  closePopupOverlay(popup);
 } 
 
 // Добавление карточек на сайт
@@ -52,15 +72,15 @@ function addCard(element) {
   cardListElement.querySelector('.element__name').textContent = element.name;
   cardImage.src = element.link;
   cardImage.alt = element.name;
-
+  // Отметить лайком картинку
   cardListElement.querySelector('.element__like').addEventListener('click', function(event) {
     event.target.classList.toggle('element__like_active')
   });
-
+  // Удаление карточки кликом на символ мусорки
   cardListElement.querySelector('.element__trash').addEventListener('click', function(event) {
     event.target.closest('.element').remove();
   });
-
+  // Открытие картинки в попапе
   cardListElement.querySelector('.element__image').addEventListener('click', function(event) {
     
     popupImage.src = element.link;
@@ -89,7 +109,7 @@ const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 
 // Попап Редактировать профиль форма
-const formTypeEditElement = document.querySelector('.popup__edit-form');
+const formTypeEditElement = document.querySelector('.popup__form');
 const nameEdit = formTypeEditElement.querySelector('#input-name');
 const descriptionEdit = formTypeEditElement.querySelector('#input-description');
 
@@ -124,19 +144,41 @@ function formTypeAddSubmitHandler(evt) {
 
   closePopup(popupTypeAddElement);
 
-  inputName.value = '';
-  inputLink.value = '';
+  evt.target.reset();
+};
+
+// Сброс состояния ошибок формы
+const resetErrors = function () {
+  // Очистка сообщений об ошибке
+  const errorSpanList = Array.from(document.querySelectorAll('.popup__input-error'));
+  errorSpanList.forEach( (errorSpanElement) => {
+    errorSpanElement.textContent = '';
+    errorSpanElement.classList.remove(configValidation.errorClass);
+  });
+  // Удаление класса видимости ошибки из инпута
+  // Сброс состояния кнопок отправки форм
+  const formList = Array.from(document.querySelectorAll(configValidation.formSelector));
+  formList.forEach( (formElement) => {
+    const buttonElement = formElement.querySelector(configValidation.submitButtonSelector);
+    const inputList = Array.from(formElement.querySelectorAll(configValidation.inputSelector));
+    inputList.forEach( (inputElement) => {
+      inputElement.classList.remove(configValidation.inputErrorClass)
+    });
+    toggleButtonState(inputList, buttonElement, configValidation.inactiveButtonClass);
+  });
 };
 
 // Обработчик события кнопки Редактировать профиль
 buttonEdit.addEventListener('click', function() {
   nameEdit.value = profileName.textContent;
   descriptionEdit.value = profileDescription.textContent;
+  resetErrors();
   openPopup(popupTypeEditElement);
 });
 
 // Обработчик события кнопки Новое место
 buttonAdd.addEventListener('click', function() {
+  resetErrors();
   openPopup(popupTypeAddElement);
 });
 

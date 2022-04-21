@@ -1,9 +1,0 @@
-.popup__edit-form {
-  margin: 24px 0 37px 34px;
-}
-
-@media screen and (max-width: 900px) {
-    .popup__edit-form {
-      margin: 42px 0 25px 22px;
-    }
-  }
