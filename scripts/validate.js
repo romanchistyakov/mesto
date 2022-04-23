@@ -40,20 +40,63 @@ const setEventListeners = function (formElement, inputSelector, submitButtonSele
     const inputList = Array.from(formElement.querySelectorAll(inputSelector));
     const buttonElement = formElement.querySelector(submitButtonSelector);
     toggleButtonState(inputList, buttonElement);
+
     inputList.forEach( function (inputElement) {
       inputElement.addEventListener('input', function () {
         checkInputValidity(formElement, inputElement, inputErrorClass, errorClass);
         toggleButtonState(inputList, buttonElement, inactiveButtonClass);
       });
     });
+
+    formElement.addEventListener('keydown', function (event) {
+      if (event.key === 'Enter' & hasInvalidInput(inputList)) {
+        event.preventDefault();
+      }
+    })
 };
-// Функция запуска валидации
-const enableValidation = function ({formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass}) {
-    const formList = Array.from(document.querySelectorAll(formSelector));
-    formList.forEach( function (formElement) {
-        setEventListeners(formElement, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass);
+
+const resetErrors = function (inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, errorSpanSelector, formList) {
+
+  const errorSpanList = Array.from(document.querySelectorAll(errorSpanSelector));
+
+  // Очистка сообщений об ошибке
+  errorSpanList.forEach( (errorSpanElement) => {
+    errorSpanElement.textContent = '';
+    errorSpanElement.classList.remove(errorClass);
+  });
+
+  // Удаление класса видимости ошибки из инпута
+  formList.forEach( (formElement) => {
+
+    const buttonElement = formElement.querySelector(submitButtonSelector);
+    const inputList = Array.from(formElement.querySelectorAll(inputSelector));
+
+    inputList.forEach( (inputElement) => {
+      inputElement.classList.remove(inputErrorClass)
     });
+
+    // Сброс состояния кнопок отправки форм
+    toggleButtonState(inputList, buttonElement, inactiveButtonClass);
+  });
 };
+
+// Функция запуска валидации
+const enableValidation = function ({formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, openButtonSelector, errorSpanSelector}) {
+  const formList = Array.from(document.querySelectorAll(formSelector));
+
+  formList.forEach( function (formElement) {
+    setEventListeners(formElement, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass);
+  });
+
+  const buttonOpenList = Array.from(document.querySelectorAll(openButtonSelector));
+
+  buttonOpenList.forEach(function (buttonOpenElement) {
+    buttonOpenElement.addEventListener('click', function () {
+      resetErrors(inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, errorSpanSelector, formList);
+    })
+  });
+};
+
 // Конфигурация параметров для валидации
 const configValidation = {
   formSelector: '.popup__form',
@@ -61,7 +104,10 @@ const configValidation = {
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_visible'
+  errorClass: 'popup__input-error_visible',
+  openButtonSelector: '.button_type_open-popup',
+  errorSpanSelector: '.popup__input-error'
 };
+
 // Запуск валидации форм в реальном времени
 enableValidation(configValidation);
