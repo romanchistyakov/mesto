@@ -105,7 +105,7 @@ const configValidation = {
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__input-error_visible',
-  openButtonSelector: '.button_type_open-popup',
+  openButtonSelector: '.profile__button_type_open-popup',
   errorSpanSelector: '.popup__input-error'
 };
 
