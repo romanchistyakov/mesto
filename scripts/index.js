@@ -57,7 +57,7 @@ closePopupOverlay();
 function openPopup(popup) {
   popup.classList.add('popup_opened');
   document.addEventListener('keydown', closePopupEscape);
-} 
+};
 
 // Добавление карточек на сайт
 const cardsContainer = document.querySelector('.elements-grid');
@@ -153,15 +153,28 @@ function formTypeAddSubmitHandler(evt) {
 
 // Обработчик события кнопки Редактировать профиль
 buttonEdit.addEventListener('click', function() {
-
+  
   nameEdit.value = profileName.textContent;
   descriptionEdit.value = profileDescription.textContent;
+
+  hideInputError(formTypeEditElement, nameEdit, configValidation.inputErrorClass, configValidation.errorClass);
+  hideInputError(formTypeEditElement, descriptionEdit, configValidation.inputErrorClass, configValidation.errorClass);
+
+  const buttonElement = formTypeEditElement.querySelector(configValidation.submitButtonSelector);
+  toggleButtonState([nameEdit, descriptionEdit], buttonElement, configValidation.inactiveButtonClass);
 
   openPopup(popupTypeEditElement);
 });
 
 // Обработчик события кнопки Новое место
 buttonAdd.addEventListener('click', function() {
+
+  hideInputError(formTypeAddElement, inputName, configValidation.inputErrorClass, configValidation.errorClass);
+  hideInputError(formTypeAddElement, inputLink, configValidation.inputErrorClass, configValidation.errorClass);
+
+  const buttonElement = formTypeAddElement.querySelector(configValidation.submitButtonSelector);
+  toggleButtonState([inputName, inputLink], buttonElement, configValidation.inactiveButtonClass);
+
   openPopup(popupTypeAddElement);
 });
 

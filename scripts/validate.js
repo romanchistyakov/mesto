@@ -37,9 +37,9 @@ const toggleButtonState = function (inputList, buttonElement, inactiveButtonClas
 };
 // Подключение слушателей изменения инпутов форм
 const setEventListeners = function (formElement, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass) {
+
     const inputList = Array.from(formElement.querySelectorAll(inputSelector));
     const buttonElement = formElement.querySelector(submitButtonSelector);
-    toggleButtonState(inputList, buttonElement);
 
     inputList.forEach( function (inputElement) {
       inputElement.addEventListener('input', function () {
@@ -55,45 +55,12 @@ const setEventListeners = function (formElement, inputSelector, submitButtonSele
     })
 };
 
-const resetErrors = function (inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, errorSpanSelector, formList) {
-
-  const errorSpanList = Array.from(document.querySelectorAll(errorSpanSelector));
-
-  // Очистка сообщений об ошибке
-  errorSpanList.forEach( (errorSpanElement) => {
-    errorSpanElement.textContent = '';
-    errorSpanElement.classList.remove(errorClass);
-  });
-
-  // Удаление класса видимости ошибки из инпута
-  formList.forEach( (formElement) => {
-
-    const buttonElement = formElement.querySelector(submitButtonSelector);
-    const inputList = Array.from(formElement.querySelectorAll(inputSelector));
-
-    inputList.forEach( (inputElement) => {
-      inputElement.classList.remove(inputErrorClass)
-    });
-
-    // Сброс состояния кнопок отправки форм
-    toggleButtonState(inputList, buttonElement, inactiveButtonClass);
-  });
-};
-
 // Функция запуска валидации
-const enableValidation = function ({formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, openButtonSelector, errorSpanSelector}) {
+const enableValidation = function ({formSelector, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass}) {
   const formList = Array.from(document.querySelectorAll(formSelector));
 
   formList.forEach( function (formElement) {
     setEventListeners(formElement, inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass);
-  });
-
-  const buttonOpenList = Array.from(document.querySelectorAll(openButtonSelector));
-
-  buttonOpenList.forEach(function (buttonOpenElement) {
-    buttonOpenElement.addEventListener('click', function () {
-      resetErrors(inputSelector, submitButtonSelector, inactiveButtonClass, inputErrorClass, errorClass, errorSpanSelector, formList);
-    })
   });
 };
 
@@ -104,9 +71,7 @@ const configValidation = {
   submitButtonSelector: '.popup__button',
   inactiveButtonClass: 'popup__button_disabled',
   inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_visible',
-  openButtonSelector: '.profile__button_type_open-popup',
-  errorSpanSelector: '.popup__input-error'
+  errorClass: 'popup__input-error_visible'
 };
 
 // Запуск валидации форм в реальном времени
