@@ -1,3 +1,7 @@
+import { Card } from "./Card.js";
+import { FormValidator } from "./FormValidator.js";
+import { openPopup, closePopup, popupTypeImageElement } from "./popup.js";
+
 const initialCards = [
   {
     name: 'Архыз',
@@ -23,25 +27,20 @@ const initialCards = [
     name: 'Байкал',
     link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
   }
-]; 
+];
 
-// Закрытие попапа
-function closePopup(popup) {
-  popup.classList.remove('popup_opened');
-  document.removeEventListener('keydown', closePopupEscape);
-};
-
-// Закрытие попапа клавишей Escape
-const closePopupEscape = function (event) {
-    if (event.key === 'Escape') {
-      const popupOpened = document.querySelector('.popup_opened')
-      closePopup(popupOpened);
-    }
+// Конфигурация параметров для валидации
+const configValidation = {
+  inputSelector: '.popup__input',
+  submitButtonSelector: '.popup__button',
+  inactiveButtonClass: 'popup__button_disabled',
+  inputErrorClass: 'popup__input_type_error',
+  errorClass: 'popup__input-error_visible'
 };
 
 // Закрытие попапа кликом на оверлэй
 const closePopupOverlay = function () {
-  popupList = document.querySelectorAll('.popup');
+  const popupList = document.querySelectorAll('.popup');
   popupList.forEach( (popupElement) => {
     popupElement.addEventListener('mousedown', function (evt) {
       if(evt.target === evt.currentTarget) {
@@ -53,53 +52,16 @@ const closePopupOverlay = function () {
 
 closePopupOverlay();
 
-// Открытие попапа
-function openPopup(popup) {
-  popup.classList.add('popup_opened');
-  document.addEventListener('keydown', closePopupEscape);
-};
+const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup__close');
 
 // Добавление карточек на сайт
 const cardsContainer = document.querySelector('.elements-grid');
-const elementTemplate = document.querySelector('.element-template').content;
-
-const popupTypeImageElement = document.querySelector('.popup_type_image');
-const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup__close');
-const popupImage = popupTypeImageElement.querySelector('.popup__image-source');
-const popupImageHead = popupTypeImageElement.querySelector('.popup__image-head');
-
-// Функция Добавить карточку, Лайк, Удалить, Просмотр
-function addCard(element) {
-  const cardListElement = elementTemplate.cloneNode(true);
-  const cardImage = cardListElement.querySelector('.element__image');
-
-  cardListElement.querySelector('.element__name').textContent = element.name;
-  cardImage.src = element.link;
-  cardImage.alt = element.name;
-  // Отметить лайком картинку
-  cardListElement.querySelector('.element__like').addEventListener('click', function(event) {
-    event.target.classList.toggle('element__like_active')
-  });
-  // Удаление карточки кликом на символ мусорки
-  cardListElement.querySelector('.element__trash').addEventListener('click', function(event) {
-    event.target.closest('.element').remove();
-  });
-  // Открытие картинки в попапе
-  cardListElement.querySelector('.element__image').addEventListener('click', function(event) {
-    
-    popupImage.src = element.link;
-    popupImage.alt = element.name;
-    popupImageHead.textContent = element.name;
-
-    openPopup(popupTypeImageElement);
-  });
-  
-  return cardListElement;
-};
 
 // Добавление карточки
-function renderCard(createCard) {
-  cardsContainer.prepend(addCard(createCard));
+function renderCard(data) {
+  const card = new Card(data,'.element-template');
+  const cardElement = card.generateCard();
+  cardsContainer.prepend(cardElement);
 }
 
 // Добавление дефолтных карточек
@@ -144,7 +106,7 @@ function formTypeAddSubmitHandler(evt) {
   renderCard({
     name: inputName.value,
     link: inputLink.value
-  });
+    },);
 
   closePopup(popupTypeAddElement);
 
@@ -157,11 +119,7 @@ buttonEdit.addEventListener('click', function() {
   nameEdit.value = profileName.textContent;
   descriptionEdit.value = profileDescription.textContent;
 
-  hideInputError(formTypeEditElement, nameEdit, configValidation.inputErrorClass, configValidation.errorClass);
-  hideInputError(formTypeEditElement, descriptionEdit, configValidation.inputErrorClass, configValidation.errorClass);
-
-  const buttonElement = formTypeEditElement.querySelector(configValidation.submitButtonSelector);
-  toggleButtonState([nameEdit, descriptionEdit], buttonElement, configValidation.inactiveButtonClass);
+  validatorFormTypeEdit.checkFormManual();
 
   openPopup(popupTypeEditElement);
 });
@@ -169,11 +127,7 @@ buttonEdit.addEventListener('click', function() {
 // Обработчик события кнопки Новое место
 buttonAdd.addEventListener('click', function() {
 
-  hideInputError(formTypeAddElement, inputName, configValidation.inputErrorClass, configValidation.errorClass);
-  hideInputError(formTypeAddElement, inputLink, configValidation.inputErrorClass, configValidation.errorClass);
-
-  const buttonElement = formTypeAddElement.querySelector(configValidation.submitButtonSelector);
-  toggleButtonState([inputName, inputLink], buttonElement, configValidation.inactiveButtonClass);
+  validatorFormTypeAdd.checkFormManual();
 
   openPopup(popupTypeAddElement);
 });
@@ -195,3 +149,11 @@ buttonCloseTypeImage.addEventListener('click', function() {
 // Обработчик события отправки формы
 formTypeEditElement.addEventListener('submit', formTypeEditSubmitHandler);
 formTypeAddElement.addEventListener('submit', formTypeAddSubmitHandler);
+
+// Создание экземпляров класса валидации форм
+
+const validatorFormTypeEdit = new FormValidator(configValidation, formTypeEditElement);
+validatorFormTypeEdit.enableValidation();
+
+const validatorFormTypeAdd = new FormValidator(configValidation, formTypeAddElement);
+validatorFormTypeAdd.enableValidation();
