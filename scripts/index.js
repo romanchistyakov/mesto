@@ -1,6 +1,6 @@
 import { Card } from "./Card.js";
 import { FormValidator } from "./FormValidator.js";
-import { openPopup, closePopup, popupTypeImageElement } from "./popup.js";
+import { openPopup, closePopup } from "./popup.js";
 
 const initialCards = [
   {
@@ -38,12 +38,12 @@ const configValidation = {
   errorClass: 'popup__input-error_visible'
 };
 
-// Закрытие попапа кликом на оверлэй
+// Закрытие попапа кликом на оверлэй и кнопку Закрыть
 const closePopupOverlay = function () {
   const popupList = document.querySelectorAll('.popup');
   popupList.forEach( (popupElement) => {
     popupElement.addEventListener('mousedown', function (evt) {
-      if(evt.target === evt.currentTarget) {
+      if(evt.target === evt.currentTarget || evt.target.classList.contains('popup__close')) {
         closePopup(popupElement);
       }
     });
@@ -52,16 +52,18 @@ const closePopupOverlay = function () {
 
 closePopupOverlay();
 
-const buttonCloseTypeImage = popupTypeImageElement.querySelector('.popup__close');
+// Создание карточки
+const createCard = function(data) {
+  const card = new Card(data,'.element-template');
+  return card.generateCard();
+}
 
 // Добавление карточек на сайт
 const cardsContainer = document.querySelector('.elements-grid');
 
 // Добавление карточки
 function renderCard(data) {
-  const card = new Card(data,'.element-template');
-  const cardElement = card.generateCard();
-  cardsContainer.prepend(cardElement);
+  cardsContainer.prepend(createCard(data));
 }
 
 // Добавление дефолтных карточек
@@ -70,7 +72,6 @@ initialCards.forEach(renderCard);
 // Попап Редактировать профиль
 const popupTypeEditElement = document.querySelector('.popup_type_edit');
 const buttonEdit = document.querySelector('.profile__edit-button');
-const buttonCloseTypeEdit = popupTypeEditElement.querySelector('.popup__close');
 const profileName = document.querySelector('.profile__name');
 const profileDescription = document.querySelector('.profile__description');
 
@@ -82,7 +83,6 @@ const descriptionEdit = formTypeEditElement.querySelector('#input-description');
 // Попап Новое место
 const popupTypeAddElement = document.querySelector('.popup_type_add');
 const buttonAdd = document.querySelector('.profile__add-button');
-const buttonCloseTypeAdd = popupTypeAddElement.querySelector('.popup__close');
 
 // Попап Новое место форма
 const formTypeAddElement = popupTypeAddElement.querySelector('.popup__form');
@@ -130,20 +130,6 @@ buttonAdd.addEventListener('click', function() {
   validatorFormTypeAdd.checkFormManual();
 
   openPopup(popupTypeAddElement);
-});
-
-// Обработчики события кнопки Закрыть
-
-buttonCloseTypeEdit.addEventListener('click', function() {
-  closePopup(popupTypeEditElement);
-});
-
-buttonCloseTypeAdd.addEventListener('click', function() {
-  closePopup(popupTypeAddElement);
-});
-
-buttonCloseTypeImage.addEventListener('click', function() {
-  closePopup(popupTypeImageElement);
 });
 
 // Обработчик события отправки формы

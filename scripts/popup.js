@@ -20,7 +20,7 @@ export function openPopup(popup) {
 };
 
 // Открытие попапа Картинки
-export const popupTypeImageElement = document.querySelector('.popup_type_image');
+const popupTypeImageElement = document.querySelector('.popup_type_image');
 const popupImage = popupTypeImageElement.querySelector('.popup__image-source');
 const popupImageHead = popupTypeImageElement.querySelector('.popup__image-head');
 
