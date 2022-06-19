@@ -67,7 +67,6 @@ buttonEdit.addEventListener('click', function() {
   formUser.open();
 });
 
-
 // Обработчик события кнопки "Новое место"
 const buttonAdd = document.querySelector('.profile__add-button');
 buttonAdd.addEventListener('click', function() {
@@ -84,50 +83,45 @@ validatorFormUser.enableValidation();
 const validatorFormImage = new FormValidator(configValidation, formTypeAddElement);
 validatorFormImage.enableValidation();
 
+const popupImage = new PopupWithImage('.popup_type_image');
+popupImage.setEventListener();
+
+const createCard = (cardItem) => {
+  const card = new Card({
+    data: cardItem,
+    handleCardClick: () => {
+      popupImage.open(cardItem);
+    },
+    templateSelector: '.element-template'});
+
+  return card.generateCard();
+};
+
 const cardList = new Section({
   items: initialCards,
   renderer: (cardItem) => {
-
-    const card = new Card({
-      data: cardItem,
-      handleCardClick: () => {
-        const popup = new PopupWithImage(cardItem, '.popup_type_image');
-        popup.setEventListener();
-        popup.open();
-      },
-      templateSelector: '.element-template'});
-
-    const cardElement = card.generateCard();
-    cardList.addItem(cardElement);
+    cardList.addItem(createCard(cardItem));
   }
-},'.elements-grid')
+},'.elements-grid');
 
 cardList.renderItems();
 
 const formImage = new PopupWithForm({
   handleSubmitForm: (formData) => {
-    const card = new Card({
-      data: formData,
-      handleCardClick: () => {
-        const popup = new PopupWithImage(formData, '.popup_type_image');
-        popup.open();
-      },
-      templateSelector: '.element-template'});
-
-    const cardElement = card.generateCard();
-    cardList.addItem(cardElement);
+    cardList.addItem(createCard(formData));
   },
-  popupSelector: '.popup_type_add'})
+  popupSelector: '.popup_type_add'
+});
 
 formImage.setEventListener();
 
-const user = new UserInfo({});
+const user = new UserInfo('.profile__name', '.profile__description');
 
 const formUser = new PopupWithForm({
   handleSubmitForm: (formData) => {
     user.setUserInfo(formData);
   },
   popupSelector: '.popup_type_edit'
-})
+});
 
 formUser.setEventListener();
