@@ -6,22 +6,9 @@ import PopupWithForm from "../components/PopupWithForm.js";
 import PopupWithConfirmation from "../components/PopupWithConfirmation.js";
 import UserInfo from "../components/UserInfo.js";
 import Api from "../components/Api.js";
+import { configValidation, configApi } from "../utils/constants.js";
 
 import "./index.css";
-
-// Конфигурация параметров для валидации
-const configValidation = {
-  inputSelector: '.popup__input',
-  submitButtonSelector: '.popup__button',
-  inactiveButtonClass: 'popup__button_disabled',
-  inputErrorClass: 'popup__input_type_error',
-  errorClass: 'popup__input-error_visible'
-};
-
-const configApi = {
-  url: 'https://mesto.nomoreparties.co/v1/cohort-42',
-  token: 'dd99ab38-d618-4232-a8a6-5e39706963e0'
-}
 
 // Попап Новое место
 const popupTypeAddElement = document.querySelector('.popup_type_add');
@@ -39,26 +26,31 @@ const formTypeEditElement = popupTypeEditElement.querySelector('.popup__form');
 const nameEdit = formTypeEditElement.querySelector('#input-name');
 const descriptionEdit = formTypeEditElement.querySelector('#input-description');
 
-buttonEdit.addEventListener('click', function() {
+const handleButtonEditClick = () => {
   const userInfoValues = user.getUserInfo();
   nameEdit.value = userInfoValues.name;
   descriptionEdit.value = userInfoValues.description;
   validatorFormUser.checkFormManual();
   formUser.open();
-});
+}
 
-// Обработчик события кнопки "Новое место"
-const buttonAdd = document.querySelector('.profile__add-button');
-buttonAdd.addEventListener('click', function() {
+buttonEdit.addEventListener('click', handleButtonEditClick);
+
+const handleButtonAddClick = () => {
   validatorFormImage.checkFormManual();
   formImage.open();
-});
+}
 
-const buttonEditAvatar = document.querySelector('.profile__edit-avatar');
-buttonEditAvatar.addEventListener('click', function() {
+const buttonAdd = document.querySelector('.profile__add-button');
+buttonAdd.addEventListener('click', handleButtonAddClick);
+
+const handleButtonEditAvatarClick = () => {
   validatorFormAvatar.checkFormManual();
   formAvatar.open();
-})
+}
+
+const buttonEditAvatar = document.querySelector('.profile__edit-avatar');
+buttonEditAvatar.addEventListener('click', handleButtonEditAvatarClick);
 
 // Создание экземпляров класса валидации форм
 const validatorFormUser = new FormValidator(configValidation, formTypeEditElement);
@@ -140,12 +132,6 @@ const cardList = new Section({
   }
 },'.elements-grid');
 
-api.getInitialCards()
-  .then((data) => {
-    cardList.renderItems(data);
-  })
-  .catch(error => console.log(error))
-
 const formImage = new PopupWithForm({
   handleSubmitForm: (formData) => {
     formImage.doLoading(true);
@@ -164,12 +150,6 @@ const formImage = new PopupWithForm({
 formImage.setEventListener();
 
 const user = new UserInfo('.profile__name', '.profile__description', '.profile__avatar');
-
-api.getUserInfo()
-  .then((data) => {
-    user.setUserInfo(data);
-  })
-  .catch(error => console.log(error))
 
 const formUser = new PopupWithForm({
   handleSubmitForm: (formData) => {
@@ -204,3 +184,14 @@ const formAvatar = new PopupWithForm({
   popupSelector: '.popup_type_edit-avatar'
 });
 formAvatar.setEventListener();
+
+Promise.all([
+  api.getUserInfo(),
+  api.getInitialCards()
+])
+.then((values) => {
+  const [userData, cardsData] = values;
+  user.setUserInfo(userData);
+  cardList.renderItems(cardsData);
+})
+.catch(error => console.log(error))
